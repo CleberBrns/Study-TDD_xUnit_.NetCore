@@ -12,7 +12,7 @@ namespace OnlineUdemyCourse.DomainTest
             {
                 Name = "Basic Computing",
                 Workload = (double)80,
-                TargetAudience = "Students",
+                TargetAudience = TargetAudience.Student,
                 Price = (double)950
             };
 
@@ -24,14 +24,22 @@ namespace OnlineUdemyCourse.DomainTest
         }
     }
 
+    public enum TargetAudience
+    {
+        Student,
+        CollegeStudent,
+        Employee,
+        Entrepreneur
+    }
+
     internal class Course
     {
         public string Name { get; private set; }
         public double Workload { get; private set; }
-        public string TargetAudience { get; private set; }
+        public TargetAudience TargetAudience { get; private set; }
         public double Price { get; private set; }
 
-        public Course(string name, double workload, string targetAudience, double price)
+        public Course(string name, double workload, TargetAudience targetAudience, double price)
         {
             this.Name = name;
             this.Workload = workload;
