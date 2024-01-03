@@ -1,4 +1,5 @@
 using ExpectedObjects;
+using OnlineUdemyCourse.DomainTest._Util;
 
 namespace OnlineUdemyCourse.DomainTest
 {
@@ -39,11 +40,9 @@ namespace OnlineUdemyCourse.DomainTest
 
             // Act
             // Assert
-            var message = Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
-                    expectedCourse.Price)).Message;
-
-            Assert.Equal("Name cannot be empty!", message);
+                    expectedCourse.Price)).WithMessage("Name cannot be empty!");
         }
 
         [Theory]
@@ -63,11 +62,9 @@ namespace OnlineUdemyCourse.DomainTest
 
             // Act
             // Assert
-            var message = Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
-            expectedCourse.Price)).Message;
-
-            Assert.Equal("Workload cannot be less than '1'!", message);
+            expectedCourse.Price)).WithMessage("Workload cannot be less than '1'!");
         }
 
         [Theory]
@@ -87,11 +84,9 @@ namespace OnlineUdemyCourse.DomainTest
 
             // Act
             // Assert
-            var message = Assert.Throws<ArgumentException>(() =>
+            Assert.Throws<ArgumentException>(() =>
                 new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
-                    expectedCourse.Price)).Message;
-
-            Assert.Equal("Price cannot be less than '1'!", message);
+                    expectedCourse.Price)).WithMessage("Price cannot be less than '1'!");
         }
     }
 
