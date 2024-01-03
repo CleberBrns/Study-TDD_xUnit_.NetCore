@@ -22,6 +22,77 @@ namespace OnlineUdemyCourse.DomainTest
             // Assert
             expectedCourse.ToExpectedObject().ShouldMatch(course);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void ShouldNotCreateCourseWithInvalidName(string invalidName)
+        {
+            // Arrange
+            var expectedCourse = new
+            {
+                Name = invalidName,
+                Workload = (double)80,
+                TargetAudience = TargetAudience.Student,
+                Price = (double)950
+            };
+
+            // Act
+            // Assert
+            var message = Assert.Throws<ArgumentException>(() =>
+                new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
+                    expectedCourse.Price)).Message;
+
+            Assert.Equal("Name cannot be empty!", message);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-2)]
+        [InlineData(-100)]
+        public void ShouldNotCreateCourseWithWorkloadLessThan1(double invalidWorkload)
+        {
+            // Arrange
+            var expectedCourse = new
+            {
+                Name = "Basic Computing",
+                Workload = invalidWorkload,
+                TargetAudience = TargetAudience.Student,
+                Price = (double)950
+            };
+
+            // Act
+            // Assert
+            var message = Assert.Throws<ArgumentException>(() =>
+                new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
+            expectedCourse.Price)).Message;
+
+            Assert.Equal("Workload cannot be less than '1'!", message);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-2)]
+        [InlineData(-100)]
+        public void ShouldNotCreateCourseWithPriceLessThan1(double invalidPrice)
+        {
+            // Arrange
+            var expectedCourse = new
+            {
+                Name = "Basic Computing",
+                Workload = (double)80,
+                TargetAudience = TargetAudience.Student,
+                Price = invalidPrice
+            };
+
+            // Act
+            // Assert
+            var message = Assert.Throws<ArgumentException>(() =>
+                new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
+                    expectedCourse.Price)).Message;
+
+            Assert.Equal("Price cannot be less than '1'!", message);
+        }
     }
 
     public enum TargetAudience
@@ -41,6 +112,21 @@ namespace OnlineUdemyCourse.DomainTest
 
         public Course(string name, double workload, TargetAudience targetAudience, double price)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Name cannot be empty!");
+            }
+
+            if (workload <= 1)
+            {
+                throw new ArgumentException("Workload cannot be less than '1'!");
+            }
+
+            if (price <= 1)
+            {
+                throw new ArgumentException("Price cannot be less than '1'!");
+            }
+
             this.Name = name;
             this.Workload = workload;
             this.TargetAudience = targetAudience;
