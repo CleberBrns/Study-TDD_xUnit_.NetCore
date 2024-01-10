@@ -1,20 +1,60 @@
 using ExpectedObjects;
 using OnlineUdemyCourse.DomainTest._Util;
+using System.Reflection;
+using Xunit.Abstractions;
 
 namespace OnlineUdemyCourse.DomainTest
 {
-    public class CourseTest
+    public class CourseTest : IDisposable
     {
+        private readonly ITestOutputHelper _outputHelper;
+
+        private readonly string _name;
+        private readonly double _workload;
+        private readonly TargetAudience _targetAudience;
+        private readonly double _price;
+
+        public CourseTest(ITestOutputHelper outputHelper)
+        {
+            _outputHelper = outputHelper;
+            ShowMethodNameBeenExecute(null, "Constructor");
+
+            _name = "Basic Computing";
+            _workload = 80;
+            _targetAudience = TargetAudience.Student;
+            _price = 950;
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            ShowMethodNameBeenExecute(MethodBase.GetCurrentMethod());
+        }
+
+        private void ShowMethodNameBeenExecute(MethodBase? methodBase, string? methodName = null)
+        {
+            if (methodBase != null)
+            {
+                _outputHelper.WriteLine($"{methodBase.Name} been executed.");
+            }
+            else if (!string.IsNullOrEmpty(methodName))
+            {
+                _outputHelper.WriteLine($"{methodName} been executed.");
+            }
+        }
+
         [Fact]
         public void ShouldCreateCourse()
         {
+            ShowMethodNameBeenExecute(MethodBase.GetCurrentMethod());
+
             // Arrange
             var expectedCourse = new
             {
-                Name = "Basic Computing",
-                Workload = (double)80,
-                TargetAudience = TargetAudience.Student,
-                Price = (double)950
+                Name = _name,
+                Workload = _workload,
+                TargetAudience = _targetAudience,
+                Price = _price
             };
 
             // Act
@@ -29,20 +69,14 @@ namespace OnlineUdemyCourse.DomainTest
         [InlineData(null)]
         public void ShouldNotCreateCourseWithInvalidName(string invalidName)
         {
+            ShowMethodNameBeenExecute(MethodBase.GetCurrentMethod());
+
             // Arrange
-            var expectedCourse = new
-            {
-                Name = invalidName,
-                Workload = (double)80,
-                TargetAudience = TargetAudience.Student,
-                Price = (double)950
-            };
 
             // Act
             // Assert
             Assert.Throws<ArgumentException>(() =>
-                new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
-                    expectedCourse.Price)).WithMessage("Name cannot be empty!");
+                new Course(invalidName, _workload, _targetAudience, _price)).WithMessage("Name cannot be empty!");
         }
 
         [Theory]
@@ -51,20 +85,14 @@ namespace OnlineUdemyCourse.DomainTest
         [InlineData(-100)]
         public void ShouldNotCreateCourseWithWorkloadLessThan1(double invalidWorkload)
         {
+            ShowMethodNameBeenExecute(MethodBase.GetCurrentMethod());
+
             // Arrange
-            var expectedCourse = new
-            {
-                Name = "Basic Computing",
-                Workload = invalidWorkload,
-                TargetAudience = TargetAudience.Student,
-                Price = (double)950
-            };
 
             // Act
             // Assert
             Assert.Throws<ArgumentException>(() =>
-                new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
-            expectedCourse.Price)).WithMessage("Workload cannot be less than '1'!");
+                new Course(_name, invalidWorkload, _targetAudience, _price)).WithMessage("Workload cannot be less than '1'!");
         }
 
         [Theory]
@@ -73,20 +101,14 @@ namespace OnlineUdemyCourse.DomainTest
         [InlineData(-100)]
         public void ShouldNotCreateCourseWithPriceLessThan1(double invalidPrice)
         {
+            ShowMethodNameBeenExecute(MethodBase.GetCurrentMethod());
+
             // Arrange
-            var expectedCourse = new
-            {
-                Name = "Basic Computing",
-                Workload = (double)80,
-                TargetAudience = TargetAudience.Student,
-                Price = invalidPrice
-            };
 
             // Act
             // Assert
             Assert.Throws<ArgumentException>(() =>
-                new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience,
-                    expectedCourse.Price)).WithMessage("Price cannot be less than '1'!");
+                new Course(_name, _workload, _targetAudience, invalidPrice)).WithMessage("Price cannot be less than '1'!");
         }
     }
 
