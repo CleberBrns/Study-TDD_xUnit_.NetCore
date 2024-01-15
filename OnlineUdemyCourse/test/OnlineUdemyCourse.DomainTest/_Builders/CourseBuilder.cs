@@ -6,6 +6,7 @@
         private double _workload = 80;
         private TargetAudience _targetAudience = TargetAudience.Student;
         private double _price = 950;
+        private string _description = "Course Description";
 
         public static CourseBuilder New()
         {
@@ -38,7 +39,7 @@
 
         public Course Build()
         {
-            return new Course(_name, _workload, _targetAudience, _price);
+            return new Course(_name, _description, _workload, _targetAudience, _price);
         }
 
     }

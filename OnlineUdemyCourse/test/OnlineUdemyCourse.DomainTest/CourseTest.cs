@@ -14,6 +14,7 @@ namespace OnlineUdemyCourse.DomainTest
         private readonly double _workload;
         private readonly TargetAudience _targetAudience;
         private readonly double _price;
+        private readonly string _description;
 
         public CourseTest(ITestOutputHelper outputHelper)
         {
@@ -24,6 +25,7 @@ namespace OnlineUdemyCourse.DomainTest
             _workload = 80;
             _targetAudience = TargetAudience.Student;
             _price = 950;
+            _description = "Course Description";
         }
 
         public void Dispose()
@@ -55,11 +57,12 @@ namespace OnlineUdemyCourse.DomainTest
                 Name = _name,
                 Workload = _workload,
                 TargetAudience = _targetAudience,
-                Price = _price
+                Price = _price,
+                Description = _description
             };
 
             // Act
-            var course = new Course(expectedCourse.Name, expectedCourse.Workload, expectedCourse.TargetAudience, expectedCourse.Price);
+            var course = new Course(expectedCourse.Name, expectedCourse.Description, expectedCourse.Workload, expectedCourse.TargetAudience, expectedCourse.Price);
 
             // Assert
             expectedCourse.ToExpectedObject().ShouldMatch(course);
@@ -127,11 +130,12 @@ namespace OnlineUdemyCourse.DomainTest
     public class Course
     {
         public string Name { get; private set; }
+        public string Description { get; set; }
         public double Workload { get; private set; }
         public TargetAudience TargetAudience { get; private set; }
         public double Price { get; private set; }
 
-        public Course(string name, double workload, TargetAudience targetAudience, double price)
+        public Course(string name, string description, double workload, TargetAudience targetAudience, double price)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -149,6 +153,7 @@ namespace OnlineUdemyCourse.DomainTest
             }
 
             this.Name = name;
+            this.Description = description;
             this.Workload = workload;
             this.TargetAudience = targetAudience;
             this.Price = price;
