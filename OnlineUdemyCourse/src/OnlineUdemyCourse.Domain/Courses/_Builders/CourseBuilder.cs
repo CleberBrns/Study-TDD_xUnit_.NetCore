@@ -1,4 +1,6 @@
-﻿namespace OnlineUdemyCourse.DomainTest._Builders
+﻿using OnlineUdemyCourse.Domain.Courses.Enums;
+
+namespace OnlineUdemyCourse.Domain.Courses._Builders
 {
     public class CourseBuilder
     {
