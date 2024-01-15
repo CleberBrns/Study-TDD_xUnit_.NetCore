@@ -1,3 +1,4 @@
+using Bogus;
 using ExpectedObjects;
 using OnlineUdemyCourse.DomainTest._Builders;
 using OnlineUdemyCourse.DomainTest._Util;
@@ -21,11 +22,13 @@ namespace OnlineUdemyCourse.DomainTest
             _outputHelper = outputHelper;
             ShowMethodNameBeenExecute(null, "Constructor");
 
-            _name = "Basic Computing";
-            _workload = 80;
+            var faker = new Faker();
+
+            _name = faker.Company.CompanyName();
+            _workload = faker.Random.Double(80, 500);
             _targetAudience = TargetAudience.Student;
-            _price = 950;
-            _description = "Course Description";
+            _price = faker.Random.Double(380, 1800);
+            _description = faker.Lorem.Paragraph();
         }
 
         public void Dispose()
