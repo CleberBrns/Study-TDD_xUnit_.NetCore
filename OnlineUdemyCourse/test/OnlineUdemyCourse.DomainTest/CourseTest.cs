@@ -1,4 +1,5 @@
 using ExpectedObjects;
+using OnlineUdemyCourse.DomainTest._Builders;
 using OnlineUdemyCourse.DomainTest._Util;
 using System.Reflection;
 using Xunit.Abstractions;
@@ -76,7 +77,8 @@ namespace OnlineUdemyCourse.DomainTest
             // Act
             // Assert
             Assert.Throws<ArgumentException>(() =>
-                new Course(invalidName, _workload, _targetAudience, _price)).WithMessage("Name cannot be empty!");
+            CourseBuilder.New().WithName(invalidName).Build())
+                .WithMessage("Name cannot be empty!");
         }
 
         [Theory]
@@ -92,7 +94,8 @@ namespace OnlineUdemyCourse.DomainTest
             // Act
             // Assert
             Assert.Throws<ArgumentException>(() =>
-                new Course(_name, invalidWorkload, _targetAudience, _price)).WithMessage("Workload cannot be less than '1'!");
+            CourseBuilder.New().WithWorkload(invalidWorkload).Build())
+                .WithMessage("Workload cannot be less than '1'!");
         }
 
         [Theory]
@@ -108,7 +111,8 @@ namespace OnlineUdemyCourse.DomainTest
             // Act
             // Assert
             Assert.Throws<ArgumentException>(() =>
-                new Course(_name, _workload, _targetAudience, invalidPrice)).WithMessage("Price cannot be less than '1'!");
+            CourseBuilder.New().WithPrice(invalidPrice).Build())
+                .WithMessage("Price cannot be less than '1'!");
         }
     }
 
@@ -120,7 +124,7 @@ namespace OnlineUdemyCourse.DomainTest
         Entrepreneur
     }
 
-    internal class Course
+    public class Course
     {
         public string Name { get; private set; }
         public double Workload { get; private set; }
