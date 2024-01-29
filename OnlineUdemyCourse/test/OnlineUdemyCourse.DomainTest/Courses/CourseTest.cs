@@ -7,7 +7,7 @@ using OnlineUdemyCourse.DomainTest._Util;
 using System.Reflection;
 using Xunit.Abstractions;
 
-namespace OnlineUdemyCourse.DomainTest
+namespace OnlineUdemyCourse.DomainTest.Courses
 {
     public class CourseTest : IDisposable
     {
