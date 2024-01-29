@@ -1,29 +1,45 @@
-﻿using Moq;
+﻿using Bogus;
+using Moq;
 using OnlineUdemyCourse.Domain.Courses;
 
 namespace OnlineUdemyCourse.DomainTest.Courses
 {
     public class CourseStoreTest
     {
+        private readonly CourseDto _courseDto;
+
+        private readonly CourseStore _courseStore;
+        private readonly Mock<ICourseRepository> _courseRepositoryMock;
+
+        public CourseStoreTest()
+        {
+            var faker = new Faker();
+
+            _courseDto = new CourseDto
+            {
+                Name = faker.Company.CompanyName(),
+                Workload = faker.Random.Double(80, 500),
+                TargetAudience = 1,//TargetAudience.Student,
+                Price = faker.Random.Double(380, 1800),
+                Description = faker.Lorem.Paragraph(),
+            };
+
+            _courseRepositoryMock = new Mock<ICourseRepository>();
+            _courseStore = new CourseStore(_courseRepositoryMock.Object);
+        }
+
         [Fact]
         public void ShouldAddCourse()
         {
-            var courseDto = new CourseDto
-            {
-                Name = "Course A",
-                Description = "Description",
-                Workload = 80,
-                TargetAudience = 1,
-                Price = 850.00
-            };
+            _courseStore.Store(_courseDto);
 
-            var courseRepositoryMock = new Mock<ICourseRepository>();
-
-            var courseStore = new CourseStore(courseRepositoryMock.Object);
-
-            courseStore.Store(courseDto);
-
-            courseRepositoryMock.Verify(x => x.Add(It.IsAny<Course>()));
+            _courseRepositoryMock.Verify(x => x.Add(
+                    It.Is<Course>(c => 
+                        c.Name == _courseDto.Name &&
+                        c.Description == _courseDto.Description
+                    )
+                )
+            );
         }
     }
 
@@ -58,7 +74,7 @@ namespace OnlineUdemyCourse.DomainTest.Courses
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Workload { get; set; }
+        public double Workload { get; set; }
         public int TargetAudience { get; set; }
         public double Price { get; set; }
     }
