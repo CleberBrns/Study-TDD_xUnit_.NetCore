@@ -2,6 +2,7 @@
 using Moq;
 using NuGet.Frameworks;
 using OnlineUdemyCourse.Domain.Courses;
+using OnlineUdemyCourse.Domain.Courses._Builders;
 using OnlineUdemyCourse.Domain.Courses.Enums;
 using OnlineUdemyCourse.DomainTest._Util;
 
@@ -46,7 +47,16 @@ namespace OnlineUdemyCourse.DomainTest.Courses
         }
 
         [Fact]
-        public void SholdNotInformInvalidTargetAudience()
+        public void ShouldNotCreateCourseWithCourseNameAlreadyExisted()
+        {
+            var savedCourse = CourseBuilder.New().WithName(_courseDto.Name).Build();
+            _courseRepositoryMock.Setup(x => x.GetByName(_courseDto.Name)).Returns(savedCourse);
+
+            Assert.ThrowsAny<ArgumentException>(() => _courseStore.Store(_courseDto)).WithMessage("Course Name is already used.");
+        }
+
+        [Fact]
+        public void ShouldNotInformInvalidTargetAudience()
         {
             var invalidTargetAudience = "Doctor";
             _courseDto.TargetAudience = invalidTargetAudience;
@@ -58,6 +68,7 @@ namespace OnlineUdemyCourse.DomainTest.Courses
     public interface ICourseRepository
     {
         void Add(Course course);
+        Course GetByName(string name);
     }
 
     public class CourseStore
@@ -71,6 +82,13 @@ namespace OnlineUdemyCourse.DomainTest.Courses
 
         public void Store(CourseDto courseDto)
         {
+            var savedCourse = _courseRepository.GetByName(courseDto.Name);
+
+            if (savedCourse != null)
+            {
+                throw new ArgumentException("Course Name is already used.");
+            }
+
             Enum.TryParse(typeof(TargetAudience), courseDto.TargetAudience, out var targetAudience);
 
             if (targetAudience == null)
